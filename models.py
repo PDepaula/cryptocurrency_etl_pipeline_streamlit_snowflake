@@ -32,7 +32,7 @@ class CoingeckoMarketSchema:
 
 @dataclass
 class APIParameters:
-    vs_currency: Optional[str] = 'usd'
+    vs_currency: Optional[str] = "usd"
     ids: Optional[str] = None
     category: Optional[str] = "centralized-exchange-token-cex"
     order: Optional[str] = None
