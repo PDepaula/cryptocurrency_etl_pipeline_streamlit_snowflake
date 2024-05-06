@@ -1,0 +1,1 @@
+Throughout this guided project you will learn more about Python, SQL, dbt, snowflake, and streamlit. We will start with setting up a local environment, creating and testing our project, then deploying to a snowflake hosted streamlit app.
