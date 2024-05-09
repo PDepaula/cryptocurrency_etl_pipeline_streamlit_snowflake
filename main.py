@@ -1,8 +1,10 @@
 import requests
 import pandas as pd
+import streamlit as st
 from models import APIParameters, CoingeckoMarketSchema
 from typing import List
 from dataclasses import asdict
+
 
 def get_data(url: str, parameters: APIParameters) -> List[CoingeckoMarketSchema]:
     """return paginated api response from url"""
@@ -18,6 +20,7 @@ def get_data(url: str, parameters: APIParameters) -> List[CoingeckoMarketSchema]
             return result
 
 def process_data(data: List[CoingeckoMarketSchema]) -> pd.DataFrame:
+    """combines coingecko response data into single pandas dataframe"""
     data_dicts = []
     for obj in data:
         market_data = CoingeckoMarketSchema(**obj)
