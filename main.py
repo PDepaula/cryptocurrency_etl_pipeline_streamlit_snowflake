@@ -5,11 +5,11 @@ from models import APIParameters, CoingeckoMarketSchema
 from typing import List
 from dataclasses import asdict
 
+result = []
 
 def get_data(url: str, parameters: APIParameters) -> List[CoingeckoMarketSchema]:
     """return paginated api response from url"""
     input = parameters
-    result = []
     while True:
         response = requests.get(url, params=asdict(input))
         response.raise_for_status()
@@ -30,10 +30,14 @@ def process_data(data: List[CoingeckoMarketSchema]) -> pd.DataFrame:
     print(dataframe)
     return dataframe
 
+def load_data(data: pd.DataFrame, nrows: int) -> pd.DataFrame:
+    return data.head(nrows)
+
 
 def main():
     url = 'https://api.coingecko.com/api/v3/coins/markets'
-    data = get_data(url,APIParameters())
-    process_data(data)
+    get_data(url,APIParameters())
+    data = process_data(result)
+    st.write(load_data(data,50))
 
 main()
