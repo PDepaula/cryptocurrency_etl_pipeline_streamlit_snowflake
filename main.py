@@ -49,31 +49,30 @@ def main():
     cur = conn.cursor()
     create_table_query = """
     CREATE TABLE IF NOT EXISTS cex_tokens (
-        id VARCHAR(100)
-        symbol VARCHAR(100)
-        name VARCHAR(100)
-        image VARCHAR(100)
-        current_price VARCHAR(100)
-        market_cap number
-        market_cap_rank number
-        fully_diluted_valuation number
-        total_volume number
-        high_24h number
-        low_24h number
-        price_change_24h float 
-        price_change_percentage_24h float 
-        market_cap_change_24h number
-        market_cap_change_percentage_24h number
-        circulating_supply number
-        total_supply number
-        max_supply number
-        ath float 
-        ath_change_percentage float 
-        ath_date varchar(100)
-        atl float 
-        atl_change_percentage float 
-        atl_date varchar(100)
-        roi variant
+        id VARCHAR(100),
+        symbol VARCHAR(100),
+        name VARCHAR(100),
+        image VARCHAR(100),
+        current_price VARCHAR(100),
+        market_cap number,
+        market_cap_rank number,
+        fully_diluted_valuation number,
+        total_volume number,
+        high_24h number,
+        low_24h number,
+        price_change_24h float, 
+        price_change_percentage_24h float, 
+        market_cap_change_24h number,
+        market_cap_change_percentage_24h number,
+        circulating_supply number,
+        total_supply number,
+        max_supply number,
+        ath float,
+        ath_change_percentage float, 
+        ath_date varchar(100),
+        atl float, 
+        atl_change_percentage float, 
+        atl_date varchar(100),
         last_updated varchar(100)
     )
     """
@@ -87,7 +86,7 @@ def main():
     total_volume, high_24h, low_24h, price_change_24h, price_change_percentage_24h,
     market_cap_change_24h, market_cap_change_percentage_24h, circulating_supply, total_supply,
     max_supply, ath, ath_change_percentage, ath_date, atl, atl_change_percentage, atl_date,
-    roi, last_updated
+    last_updated
     )
     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
     """
@@ -97,7 +96,5 @@ def main():
     conn.commit()
     cur.close()
     conn.close()
-
-
 
 main()
