@@ -27,6 +27,7 @@ def process_data(data: List[CoingeckoMarketSchema]) -> pd.DataFrame:
         market_data = CoingeckoMarketSchema(**obj)
         data_dicts.append(asdict(market_data))
     dataframe = pd.DataFrame(data_dicts) 
+    dataframe.drop('roi',axis=1)
     return dataframe
 
 def load_data(data: pd.DataFrame, nrows: int) -> pd.DataFrame:
