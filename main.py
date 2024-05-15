@@ -1,5 +1,6 @@
 import requests
 import pandas as pd
+import numpy as np
 import snowflake.connector
 from models import APIParameters, CoingeckoMarketSchema
 from typing import List
@@ -27,8 +28,9 @@ def process_data(data: List[CoingeckoMarketSchema]) -> pd.DataFrame:
         market_data = CoingeckoMarketSchema(**obj)
         data_dicts.append(asdict(market_data))
     dataframe = pd.DataFrame(data_dicts) 
-    dataframe.drop('roi',axis=1)
-    return dataframe
+    drop_roi = dataframe.drop('roi',axis=1)
+    final_df = drop_roi.replace(np.nan, None)
+    return final_df
 
 def load_data(data: pd.DataFrame, nrows: int) -> pd.DataFrame:
     return data.head(nrows)
@@ -89,7 +91,7 @@ def main():
     max_supply, ath, ath_change_percentage, ath_date, atl, atl_change_percentage, atl_date,
     last_updated
     )
-    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
     """
     cur.executemany(insert_query,rows)
 

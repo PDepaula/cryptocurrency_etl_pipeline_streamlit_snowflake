@@ -27,6 +27,7 @@ class CoingeckoMarketSchema:
     atl: float
     atl_change_percentage: float
     atl_date: str
+    roi: dict
     last_updated: str
 
 @dataclass
