@@ -30,12 +30,16 @@ def transform_json_to_dataframe(data: List[CoingeckoMarketSchema]) -> pd.DataFra
     dataframe = pd.DataFrame(data_dicts) 
     drop_roi = dataframe.drop('roi',axis=1)
     final_df = drop_roi.replace(np.nan, None)
-    return final_df
+    return dataframe
 
-def drop_dataframe_column(dataframe: pd.DataFrame) -> pd.DataFrame:
-    pass
+def drop_dataframe_column(dataframe: pd.DataFrame, column: str) -> pd.DataFrame:
+    """drops column from dataframe and replaces all NaN values to None"""
+    transformed_dataframe = dataframe.drop(column,axis=1)
+    final_dataframe = transformed_dataframe.replace(np.nan, None)
+    return final_dataframe
 
 def load_data(data: pd.DataFrame, nrows: int) -> pd.DataFrame:
+    """returns summary of data given n rows"""
     return data.head(nrows)
 
 
