@@ -1,7 +1,7 @@
 import snowflake.connector
 from models import APIParameters
 from config import *
-from etl_functions import get_data, transform_json_to_dataframe, drop_dataframe_column
+from etl_funcs import get_data, transform_json_to_dataframe, drop_dataframe_column
 
 
 def main():
@@ -9,7 +9,6 @@ def main():
     data = get_data(url,APIParameters())
     dataframe = transform_json_to_dataframe(data)
     transformed_dataframe = drop_dataframe_column(dataframe,'roi')
-
     conn = snowflake.connector.connect(
         user=SNOWFLAKE_USER,
         password=SNOWFLAKE_PASSWORD,
@@ -20,7 +19,6 @@ def main():
     )
 
     cur = conn.cursor()
-    
     create_table_query = """
     CREATE OR REPLACE TABLE IF NOT EXISTS cex_tokens (
         id VARCHAR(100),
