@@ -21,7 +21,7 @@ def get_data(url: str, parameters: APIParameters) -> List[CoingeckoMarketSchema]
         if not data:
             return result
 
-def process_data(data: List[CoingeckoMarketSchema]) -> pd.DataFrame:
+def transform_json_to_dataframe(data: List[CoingeckoMarketSchema]) -> pd.DataFrame:
     """combines coingecko response data into single pandas dataframe"""
     data_dicts = []
     for obj in data:
@@ -32,6 +32,9 @@ def process_data(data: List[CoingeckoMarketSchema]) -> pd.DataFrame:
     final_df = drop_roi.replace(np.nan, None)
     return final_df
 
+def drop_dataframe_column(dataframe: pd.DataFrame) -> pd.DataFrame:
+    pass
+
 def load_data(data: pd.DataFrame, nrows: int) -> pd.DataFrame:
     return data.head(nrows)
 
@@ -39,7 +42,7 @@ def load_data(data: pd.DataFrame, nrows: int) -> pd.DataFrame:
 def main():
     url = 'https://api.coingecko.com/api/v3/coins/markets'
     data = get_data(url,APIParameters())
-    dataframe = process_data(data)
+    dataframe = transform_json_to_dataframe(data)
     conn = snowflake.connector.connect(
         user=SNOWFLAKE_USER,
         password=SNOWFLAKE_PASSWORD,
