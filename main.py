@@ -38,13 +38,14 @@ def drop_dataframe_column(dataframe: pd.DataFrame, column: str) -> pd.DataFrame:
 
 def load_data(data: pd.DataFrame, nrows: int) -> pd.DataFrame:
     """returns summary of data given n rows"""
-    return data.head(nrows) 
+    return data.head(nrows)
 
 
 def main():
     url = 'https://api.coingecko.com/api/v3/coins/markets'
     data = get_data(url,APIParameters())
     dataframe = transform_json_to_dataframe(data)
+    transformed_dataframe = drop_dataframe_column(dataframe,'roi')
     conn = snowflake.connector.connect(
         user=SNOWFLAKE_USER,
         password=SNOWFLAKE_PASSWORD,
@@ -86,7 +87,7 @@ def main():
     """
     cur.execute(create_table_query)
     # convert dataframe to rows
-    rows = [tuple(x) for x in dataframe.to_numpy()]
+    rows = [tuple(x) for x in transformed_dataframe.to_numpy()]
 
     insert_query = """
     INSERT INTO cex_tokens (
