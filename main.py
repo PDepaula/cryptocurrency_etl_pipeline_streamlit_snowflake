@@ -20,7 +20,7 @@ def main():
 
     cur = conn.cursor()
     create_table_query = """
-    CREATE OR REPLACE TABLE IF NOT EXISTS cex_tokens (
+    CREATE OR REPLACE TABLE cex_tokens (
         id VARCHAR(100),
         symbol VARCHAR(100),
         name VARCHAR(100),
