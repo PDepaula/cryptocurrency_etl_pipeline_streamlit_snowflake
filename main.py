@@ -28,8 +28,6 @@ def transform_json_to_dataframe(data: List[CoingeckoMarketSchema]) -> pd.DataFra
         market_data = CoingeckoMarketSchema(**obj)
         data_dicts.append(asdict(market_data))
     dataframe = pd.DataFrame(data_dicts) 
-    drop_roi = dataframe.drop('roi',axis=1)
-    final_df = drop_roi.replace(np.nan, None)
     return dataframe
 
 def drop_dataframe_column(dataframe: pd.DataFrame, column: str) -> pd.DataFrame:
@@ -40,7 +38,7 @@ def drop_dataframe_column(dataframe: pd.DataFrame, column: str) -> pd.DataFrame:
 
 def load_data(data: pd.DataFrame, nrows: int) -> pd.DataFrame:
     """returns summary of data given n rows"""
-    return data.head(nrows)
+    return data.head(nrows) 
 
 
 def main():
