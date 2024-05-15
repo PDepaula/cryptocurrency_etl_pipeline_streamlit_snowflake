@@ -1,44 +1,7 @@
-import requests
-import pandas as pd
-import numpy as np
 import snowflake.connector
-from models import APIParameters, CoingeckoMarketSchema
-from typing import List
-from dataclasses import asdict
+from models import APIParameters
 from config import *
-
-
-def get_data(url: str, parameters: APIParameters) -> List[CoingeckoMarketSchema]:
-    """return paginated api response from url"""
-    result = []
-    input = parameters
-    while True:
-        response = requests.get(url, params=asdict(input))
-        response.raise_for_status()
-        data = response.json()
-        result.extend(data)
-        input.page += 1
-        if not data:
-            return result
-
-def transform_json_to_dataframe(data: List[CoingeckoMarketSchema]) -> pd.DataFrame:
-    """combines coingecko response data into single pandas dataframe"""
-    data_dicts = []
-    for obj in data:
-        market_data = CoingeckoMarketSchema(**obj)
-        data_dicts.append(asdict(market_data))
-    dataframe = pd.DataFrame(data_dicts) 
-    return dataframe
-
-def drop_dataframe_column(dataframe: pd.DataFrame, column: str) -> pd.DataFrame:
-    """drops column from dataframe and replaces all NaN values to None"""
-    transformed_dataframe = dataframe.drop(column,axis=1)
-    final_dataframe = transformed_dataframe.replace(np.nan, None)
-    return final_dataframe
-
-def load_data(data: pd.DataFrame, nrows: int) -> pd.DataFrame:
-    """returns summary of data given n rows"""
-    return data.head(nrows)
+from etl_functions import get_data, transform_json_to_dataframe, drop_dataframe_column
 
 
 def main():
@@ -46,6 +9,7 @@ def main():
     data = get_data(url,APIParameters())
     dataframe = transform_json_to_dataframe(data)
     transformed_dataframe = drop_dataframe_column(dataframe,'roi')
+
     conn = snowflake.connector.connect(
         user=SNOWFLAKE_USER,
         password=SNOWFLAKE_PASSWORD,
@@ -56,8 +20,9 @@ def main():
     )
 
     cur = conn.cursor()
+    
     create_table_query = """
-    CREATE TABLE IF NOT EXISTS cex_tokens (
+    CREATE OR REPLACE TABLE IF NOT EXISTS cex_tokens (
         id VARCHAR(100),
         symbol VARCHAR(100),
         name VARCHAR(100),
@@ -86,6 +51,7 @@ def main():
     )
     """
     cur.execute(create_table_query)
+
     # convert dataframe to rows
     rows = [tuple(x) for x in transformed_dataframe.to_numpy()]
 
