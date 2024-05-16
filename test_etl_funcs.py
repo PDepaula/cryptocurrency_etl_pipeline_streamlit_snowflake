@@ -1,8 +1,7 @@
 import pytest
 import pandas as pd
-from etl_funcs import get_data, transform_json_to_dataframe, drop_dataframe_column
-from requests_mock import Mocker
-from models import APIParameters, CoingeckoMarketSchema
+from etl_funcs import transform_json_to_dataframe, drop_dataframe_column
+from models import CoingeckoMarketSchema
 from typing import List
 """
 Unit tests for extract, load, and transform functions
