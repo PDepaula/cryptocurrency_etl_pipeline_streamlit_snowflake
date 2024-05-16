@@ -48,3 +48,10 @@ def test_transform_json_to_dataframe(mock_data: List[CoingeckoMarketSchema]):
     assert isinstance(df, pd.DataFrame)
     assert len(df) == len(mock_data)
     assert list(df.columns) == expected_columns
+
+def test_drop_dataframe_column(mock_data: List[CoingeckoMarketSchema]):
+    df = transform_json_to_dataframe(mock_data)
+    new_df = drop_dataframe_column(df,'roi')
+    key_length = len(mock_data[0].keys())
+    assert isinstance(new_df, pd.DataFrame)
+    assert len(new_df.columns) == key_length - 1
