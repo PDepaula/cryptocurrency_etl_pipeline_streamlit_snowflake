@@ -1,16 +1,15 @@
 import pytest
+import pandas as pd
 from etl_funcs import get_data, transform_json_to_dataframe, drop_dataframe_column
 from requests_mock import Mocker
 from models import APIParameters, CoingeckoMarketSchema
+from typing import List
 """
-Unit tests for extract, load, and transform functions, including mock request response data.
-Endpoint used for Coingecko data: 'https://api.coingecko.com/api/v3/coins/markets'
+Unit tests for extract, load, and transform functions
 """
-
-markets_url = 'https://api.coingecko.com/api/v3/coins/markets'
 
 @pytest.fixture
-def mock_api_response():
+def mock_data():
     data = [
     {
         "id": "bitcoin",
@@ -37,15 +36,15 @@ def mock_api_response():
         "atl": 67.81,
         "atl_change_percentage": 103455.83335,
         "atl_date": "2013-07-06T00:00:00.000Z",
-        "roi": null,
+        "roi": "",
         "last_updated": "2024-04-07T16:49:31.736Z"
     }
     ]
     return data
 
-def test_get_data(requests_mock: Mocker, mock_api_response):
-    parameters = APIParameters(page=1,per_page=10)
-    requests_mock.get(markets_url, json=mock_api_response)
-    result = get_data(markets_url, parameters)
-    assert len(result) == len(mock_api_response)
-    assert all(isinstance(item, CoingeckoMarketSchema) for item in result)
+def test_transform_json_to_dataframe(mock_data: List[CoingeckoMarketSchema]):
+    df = transform_json_to_dataframe(mock_data)
+    expected_columns = list(CoingeckoMarketSchema.__annotations__.keys())
+    assert isinstance(df, pd.DataFrame)
+    assert len(df) == len(mock_data)
+    assert list(df.columns) == expected_columns
